@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniERP — Nonvoyxona</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#718096;--line:#e7ebf2;--brand:#d97706;--brand2:#f59e0b;--green:#15966b;--red:#dc5454;--nav:#172033}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink)}
+.app{display:flex;min-height:100vh}.sidebar{width:245px;background:var(--nav);color:#fff;padding:22px 14px;flex-shrink:0}.logo{font-size:21px;font-weight:800;padding:8px 10px 24px}.logo span{color:#fbbf24}.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 13px;margin:4px 0;border:0;border-radius:10px;background:transparent;color:#cbd5e1;text-align:left;font-size:14px;cursor:pointer}.nav button.active,.nav button:hover{background:#29364d;color:white}.nav .ico{width:22px;text-align:center}.main{flex:1;min-width:0;padding:25px 28px 45px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.top h1{font-size:25px;margin:0}.top p{margin:5px 0 0;color:var(--muted);font-size:13px}.date{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:10px}
+.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.stat,.panel,.tile{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 3px 12px #1b29400a}.stat .label{font-size:12px;color:var(--muted)}.stat strong{display:block;font-size:24px;margin:8px 0 3px}.stat small{color:var(--muted);font-size:11px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:23px 0 12px;gap:10px}.section-title h2{font-size:17px;margin:0}.panel{margin-top:14px}.muted{color:var(--muted)}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--brand);color:#fff;font-weight:650;cursor:pointer;font-size:13px}.btn:hover{filter:brightness(.96)}.btn.secondary{background:#eef2f7;color:#344054}.btn.danger{background:#fff0f0;color:#c03939}.btn.green{background:var(--green)}.btn.small{padding:7px 10px;font-size:12px}.actions{display:flex;gap:7px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-weight:600;background:#f8fafc}th,td{padding:12px 10px;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}.table-wrap{overflow:auto}.empty{text-align:center;color:var(--muted);padding:25px}
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #dce2eb;border-radius:9px;padding:10px 11px;font:inherit;font-size:13px;background:#fff;color:var(--ink)}.field textarea{min-height:70px;resize:vertical}.field input:focus,.field select:focus{outline:2px solid #fbbf2480;border-color:var(--brand)}
+.inline-form{display:flex;gap:9px;flex-wrap:wrap;align-items:end}.inline-form .field{min-width:130px;flex:1}.pill{display:inline-block;padding:4px 8px;border-radius:20px;font-size:11px;background:#fff4df;color:#9a5b00}.pill.green{background:#e7f8f1;color:#08764f}.pill.red{background:#fff0f0;color:#b42318}
+.recipe-list{display:grid;gap:9px;margin-top:12px}.recipe-row{display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:8px;align-items:center}.recipe-row select,.recipe-row input{min-width:0;width:100%;padding:9px;border:1px solid var(--line);border-radius:8px}.notice{padding:12px 14px;border-radius:10px;background:#fff7e8;color:#86520a;font-size:12px;margin-top:12px;line-height:1.5}
+.modal-back{display:none;position:fixed;inset:0;background:#11182788;z-index:10;align-items:center;justify-content:center;padding:15px}.modal-back.show{display:flex}.modal{background:#fff;border-radius:16px;padding:22px;width:min(560px,100%);max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h3{margin:0}.close{border:0;background:#f1f5f9;border-radius:8px;padding:7px 10px;cursor:pointer}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#172033;color:#fff;padding:11px 16px;border-radius:10px;display:none;z-index:20;font-size:13px}
+.bar{height:9px;background:#eef2f7;border-radius:9px;overflow:hidden;margin-top:8px}.bar span{display:block;height:100%;background:var(--brand);border-radius:9px}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tile{cursor:pointer}.tile b{display:block;margin:8px 0 4px}.tile span{font-size:12px;color:var(--muted)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.sidebar{width:205px}.main{padding:20px}}
+@media(max-width:650px){.app{display:block}.sidebar{width:100%;padding:10px 10px 8px}.logo{padding:5px 8px 10px}.nav{display:flex;overflow:auto;gap:5px}.nav button{white-space:nowrap;width:auto;margin:0;padding:9px 11px;font-size:12px}.nav .ico{width:auto}.main{padding:17px 13px 35px}.top h1{font-size:21px}.date{display:none}.grid{gap:9px}.stat{padding:13px}.stat strong{font-size:19px}.formgrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}.recipe-row{grid-template-columns:1.3fr .8fr .8fr auto}th,td{padding:10px 8px;white-space:nowrap}}
+@media(max-width:390px){.formgrid{grid-template-columns:1fr}.stat strong{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="logo">🍞 Mini<span>ERP</span></div>
+ <nav class="nav" id="nav">
+  <button class="active" data-page="home"><span class="ico">⌂</span> Bosh sahifa</button>
+  <button data-page="raw"><span class="ico">🌾</span> Xomashyo</button>
+  <button data-page="bread"><span class="ico">🥖</span> Non turlari</button>
+  <button data-page="production"><span class="ico">🏭</span> Ishlab chiqarish</button>
+  <button data-page="sales"><span class="ico">🛒</span> Sotuv</button>
+  <button data-page="delivery"><span class="ico">🚚</span> Yetkazib berish</button>
+  <button data-page="reports"><span class="ico">📊</span> Hisobot</button>
+  <button data-page="settings"><span class="ico">⚙️</span> Sozlamalar</button>
+ </nav>
+</aside>
+<main class="main">
+ <header class="top"><div><h1 id="pageTitle">Bosh sahifa</h1><p>Nonvoyxona faoliyatini boshqarish tizimi</p></div><div class="date" id="today"></div></header>
+
+ <section class="page active" id="home">
+  <div class="grid">
+   <div class="stat"><div class="label">Bugungi tushum</div><strong id="sRevenue">0 so'm</strong><small>Sotuvlardan tushgan pul</small></div>
+   <div class="stat"><div class="label">Taxminiy foyda</div><strong id="sProfit">0 so'm</strong><small>Tan narxi ayirilgandan keyin</small></div>
+   <div class="stat"><div class="label">Ombordagi non</div><strong id="sStock">0 dona</strong><small>Tayyor mahsulot</small></div>
+   <div class="stat"><div class="label">Xomashyo turlari</div><strong id="sRaw">0 ta</strong><small>Ro'yxatdagi mahsulotlar</small></div>
+  </div>
+  <div class="section-title"><h2>Tezkor amallar</h2></div>
+  <div class="quick">
+   <div class="tile" onclick="showPage('production')">🏭<b>Ishlab chiqarish</b><span>Yangi non ishlab chiqarish</span></div>
+   <div class="tile" onclick="showPage('sales')">🛒<b>Yangi sotuv</b><span>Sotilgan nonlarni kiritish</span></div>
+   <div class="tile" onclick="showPage('delivery')">🚚<b>Buyurtma</b><span>Yetkazib berishni rejalash</span></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Oxirgi sotuvlar</h2><button class="btn secondary small" onclick="showPage('sales')">Barchasi</button></div><div class="table-wrap"><table><thead><tr><th>Sana</th><th>Non turi</th><th>Soni</th><th>Jami</th></tr></thead><tbody id="recentSales"></tbody></table></div></div>
+  <div class="panel"><h2 style="font-size:16px;margin:0 0 10px">Tizim haqida</h2><div class="muted" style="font-size:13px;line-height:1.6">Ma'lumotlar ushbu qurilmaning brauzerida saqlanadi. Muntazam ravishda ma'lumotlaringizni eksport qilib zaxira nusxa oling.</div></div>
+ </section>
+
+ <section class="page" id="raw">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Xomashyo qo'shish</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Mahsulot nomi</label><input id="rawName" placeholder="Masalan: Un"></div>
+    <div class="field"><label>O'lchov birligi</label><select id="rawUnit"><option>kg</option><option>litr</option><option>dona</option><option>gramm</option><option>qop</option></select></div>
+    <div class="field"><label>Mavjud miqdor</label><input id="rawQty" type="number" min="0" step="0.001" placeholder="0"></div>
+    <div class="field"><label>Birlik xarid narxi (so'm)</label><input id="rawPrice" type="number" min="0" placeholder="0"></div>
+   </div><div style="margin-top:13px"><button class="btn" onclick="addRaw()">+ Xomashyo qo'shish</button></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Xomashyo ombori</h2></div><div class="table-wrap"><table><thead><tr><th>Mahsulot</th><th>Miqdor</th><th>Birlik</th><th>Narxi</th><th>Qiymati</th><th></th></tr></thead><tbody id="rawTable"></tbody></table></div></div>
+ </section>
+
+ <section class="page" id="bread">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Non turini qo'shish</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Non nomi</label><input id="breadName" placeholder="Masalan: Obi non"></div>
+    <div class="field"><label>Sotuv narxi (so'm/dona)</label><input id="breadSell" type="number" min="0" placeholder="5000"></div>
+    <div class="field"><label>Tan narxi (so'm/dona)</label><input id="breadCost" type="number" min="0" placeholder="3000"></div>
+   </div><div style="margin-top:13px"><button class="btn" onclick="addBread()">+ Non turini qo'shish</button></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Non turlari va retseptlar</h2></div><div class="table-wrap"><table><thead><tr><th>Non turi</th><th>Tan narxi</th><th>Sotuv narxi</th><th>Ombor</th><th>Retsept</th><th></th></tr></thead><tbody id="breadTable"></tbody></table></div></div>
+ </section>
+
+ <section class="page" id="production">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Ishlab chiqarish</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Non turi</label><select id="prodBread"></select></div>
+    <div class="field"><label>Ishlab chiqariladigan soni</label><input id="prodQty" type="number" min="1" value="10"></div>
+    <div class="field"><label>Sana</label><input id="prodDate" type="date"></div>
+   </div><div class="notice" id="prodInfo">Non turini tanlang — kerakli xomashyo miqdori ko'rsatiladi.</div>
+   <div style="margin-top:13px"><button class="btn green" onclick="produce()">Ishlab chiqarishni tasdiqlash</button></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Ishlab chiqarish tarixi</h2></div><div class="table-wrap"><table><thead><tr><th>Sana</th><th>Non</th><th>Soni</th><th>Hisoblangan tannarx</th></tr></thead><tbody id="prodTable"></tbody></table></div></div>
+ </section>
+
+ <section class="page" id="sales">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Yangi sotuv</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Non turi</label><select id="saleBread"></select></div>
+    <div class="field"><label>Sotilgan soni</label><input id="saleQty" type="number" min="1" value="1"></div>
+    <div class="field"><label>Sana</label><input id="saleDate" type="date"></div>
+   </div><div class="notice" id="saleInfo">Non turini tanlang.</div>
+   <div style="margin-top:13px"><button class="btn" onclick="sell()">Sotuvni saqlash</button></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Sotuvlar tarixi</h2></div><div class="table-wrap"><table><thead><tr><th>Sana</th><th>Non turi</th><th>Soni</th><th>Narxi</th><th>Jami</th><th>Foyda</th></tr></thead><tbody id="salesTable"></tbody></table></div></div>
+ </section>
+
+ <section class="page" id="delivery">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Yetkazib berish buyurtmasi</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Buyurtmachi / do'kon</label><input id="delCustomer" placeholder="Do'kon yoki mijoz nomi"></div>
+    <div class="field"><label>Telefon</label><input id="delPhone" placeholder="+998..."></div>
+    <div class="field"><label>Manzil</label><input id="delAddress" placeholder="Yetkazish manzili"></div>
+    <div class="field"><label>Non turi</label><select id="delBread"></select></div>
+    <div class="field"><label>Soni</label><input id="delQty" type="number" min="1" value="10"></div>
+    <div class="field"><label>Haydovchi</label><input id="delDriver" placeholder="Haydovchi ismi"></div>
+   </div><div style="margin-top:13px"><button class="btn" onclick="addDelivery()">Buyurtmani saqlash</button></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Yetkazib berishlar</h2></div><div class="table-wrap"><table><thead><tr><th>Sana</th><th>Mijoz/do'kon</th><th>Manzil</th><th>Mahsulot</th><th>Soni</th><th>Haydovchi</th><th>Holat</th><th></th></tr></thead><tbody id="deliveryTable"></tbody></table></div></div>
+ </section>
+
+ <section class="page" id="reports">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Moliyaviy hisobot</h2></div>
+   <div class="grid">
+    <div class="stat"><div class="label">Jami tushum</div><strong id="rRevenue">0</strong></div>
+    <div class="stat"><div class="label">Mahsulot tannarxi</div><strong id="rCost">0</strong></div>
+    <div class="stat"><div class="label">Yalpi foyda</div><strong id="rGross">0</strong></div>
+    <div class="stat"><div class="label">Kommunal ulush</div><strong id="rUtility">0</strong></div>
+   </div>
+   <div class="notice">Kommunal ulush sozlamalarda belgilanadigan foiz bo'yicha yalpi foydadan hisoblanadi. Bu hisob-kitobni o'zingizning kelishuv shartlaringizga moslang.</div>
+   <div class="section-title"><h2>Non turlari bo'yicha sotuv</h2></div>
+   <div class="table-wrap"><table><thead><tr><th>Non turi</th><th>Sotilgan</th><th>Tushum</th><th>Foyda</th></tr></thead><tbody id="reportBread"></tbody></table></div>
+  </div>
+  <div class="panel"><div class="section-title" style="margin-top:0"><h2>Ma'lumotlar zaxirasi</h2></div><p class="muted" style="font-size:13px">Barcha ma'lumotlarni JSON fayl sifatida yuklab oling yoki avvalgi zaxira faylini tiklang.</p><div class="actions"><button class="btn secondary" onclick="exportData()">Zaxira nusxa yuklab olish</button><label class="btn secondary" style="cursor:pointer">Zaxira faylni tiklash<input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)"></label></div></div>
+ </section>
+
+ <section class="page" id="settings">
+  <div class="panel">
+   <div class="section-title" style="margin-top:0"><h2>Hisob-kitob sozlamalari</h2></div>
+   <div class="formgrid">
+    <div class="field"><label>Kommunal ulush (% foydadan)</label><input id="utilityRate" type="number" min="0" max="100" step="0.1"></div>
+    <div class="field"><label>Nonvoyxona nomi</label><input id="bakeryName" placeholder="MiniERP Nonvoyxona"></div>
+   </div><div style="margin-top:13px"><button class="btn" onclick="saveSettings()">Sozlamalarni saqlash</button></div>
+  </div>
+  <div class="panel"><h2 style="font-size:16px">Muhim eslatma</h2><p class="muted" style="font-size:13px;line-height:1.6">Bu dastur hozircha bitta qurilmada, bitta brauzer ichida ishlaydi. GitHub Pages'ga joylanganda sayt internetda ochiladi, lekin turli telefonlardagi ma'lumotlar avtomatik sinxronlanmaydi. Buning uchun keyinchalik server yoki Firebase kabi ma'lumotlar bazasi ulash kerak.</p><button class="btn danger" onclick="resetAll()">Barcha ma'lumotlarni tozalash</button></div>
+ </section>
+</main>
+</div>
+
+<div class="modal-back" id="recipeModal"><div class="modal"><div class="modal-head"><h3 id="recipeTitle">Retsept</h3><button class="close" onclick="closeRecipe()">✕</button></div><p class="muted" style="font-size:12px">1 dona non uchun xomashyo miqdorini kiriting. Masalan, un — 0.25 kg.</p><div id="recipeRows" class="recipe-list"></div><div class="actions" style="margin-top:13px"><button class="btn secondary" onclick="addRecipeRow()">+ Xomashyo qo'shish</button><button class="btn" onclick="saveRecipe()">Retseptni saqlash</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id), money=n=>(Number(n)||0).toLocaleString('uz-UZ')+" so'm", today=()=>new Date().toISOString().slice(0,10);
+let db=load();
+function fresh(){return {raw:[],breads:[
+ {id:1,name:"Obi non",sell:4000,cost:2500,stock:0,recipe:[]},
+ {id:2,name:"Patir",sell:8000,cost:5000,stock:0,recipe:[]},
+ {id:3,name:"Kulcha",sell:5000,cost:3200,stock:0,recipe:[]},
+ {id:4,name:"Shirmoy non",sell:7000,cost:4500,stock:0,recipe:[]}
+],production:[],sales:[],deliveries:[],settings:{utility:10,name:"MiniERP Nonvoyxona"}}}
+function load(){try{return JSON.parse(localStorage.getItem('minierp_bakery'))||fresh()}catch(e){return fresh()}}
+function save(){localStorage.setItem('minierp_bakery',JSON.stringify(db));render()}
+function id(){return Date.now()+Math.floor(Math.random()*1000)}
+function toast(t){let e=$('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2400)}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));let b=document.querySelector(`[data-page="${p}"]`);$('pageTitle').textContent=b?b.textContent.trim():'MiniERP';render()}
+$('nav').addEventListener('click',e=>{let b=e.target.closest('button[data-page]');if(b)showPage(b.dataset.page)});
+function addRaw(){let name=$('rawName').value.trim(),qty=+$('rawQty').value,price=+$('rawPrice').value;if(!name||qty<0||price<0){toast("Ma'lumotlarni to'g'ri kiriting");return}db.raw.push({id:id(),name,unit:$('rawUnit').value,qty,price});$('rawName').value=$('rawQty').value=$('rawPrice').value='';save();toast("Xomashyo qo'shildi")}
+function addBread(){let name=$('breadName').value.trim(),sell=+$('breadSell').value,cost=+$('breadCost').value;if(!name||sell<=0||cost<0){toast("Non nomi va narxlarini kiriting");return}db.breads.push({id:id(),name,sell,cost,stock:0,recipe:[]});$('breadName').value=$('breadSell').value=$('breadCost').value='';save();toast("Non turi qo'shildi")}
+function deleteItem(type,i){if(!confirm("O'chirishni tasdiqlaysizmi?"))return;if(type==='raw')db.raw=db.raw.filter(x=>x.id!==i);if(type==='bread')db.breads=db.breads.filter(x=>x.id!==i);save()}
+let recipeBread=null;
+function openRecipe(i){recipeBread=db.breads.find(x=>x.id===i);if(!recipeBread)return;$('recipeTitle').textContent=recipeBread.name+" — retsept";$('recipeRows').innerHTML='';(recipeBread.recipe.length?recipeBread.recipe:[{rawId:db.raw[0]?.id||'',qty:''}]).forEach(r=>addRecipeRow(r));$('recipeModal').classList.add('show')}
+function closeRecipe(){$('recipeModal').classList.remove('show')}
+function addRecipeRow(r={}){let row=document.createElement('div');row.className='recipe-row';let opts=db.raw.map(x=>`<option value="${x.id}" ${String(x.id)===String(r.rawId)?'selected':''}>${esc(x.name)} (${esc(x.unit)})</option>`).join('');row.innerHTML=`<select class="rr-raw"><option value="">Xomashyo tanlang</option>${opts}</select><input class="rr-qty" type="number" min="0" step="0.001" placeholder="Miqdor" value="${r.qty??''}"><span class="muted" style="font-size:11px">1 dona uchun</span><button class="btn danger small" onclick="this.parentElement.remove()">✕</button>`;$('recipeRows').appendChild(row)}
+function saveRecipe(){let rows=[...document.querySelectorAll('.recipe-row')],rec=[];for(let r of rows){let rawId=+r.querySelector('.rr-raw').value,qty=+r.querySelector('.rr-qty').value;if(rawId&&qty>0)rec.push({rawId,qty})}recipeBread.recipe=rec;closeRecipe();save();toast("Retsept saqlandi")}
+function costPerBread(b){if(!b.recipe?.length)return +b.cost||0;return b.recipe.reduce((s,r)=>{let raw=db.raw.find(x=>x.id===r.rawId);return s+(raw?raw.price*r.qty:0)},0)}
+function prodInfo(){let b=db.breads.find(x=>x.id==$('prodBread').value),q=+$('prodQty').value||0;if(!b){$('prodInfo').textContent="Non turini tanlang.";return}let lines=(b.recipe||[]).map(r=>{let x=db.raw.find(y=>y.id===r.rawId);return x?`${x.name}: ${(r.qty*q).toFixed(3)} ${x.unit}`:''}).filter(Boolean);$('prodInfo').innerHTML=`<b>${q} dona ${esc(b.name)}</b> uchun kerakli xomashyo:<br>${lines.length?lines.map(esc).join('<br>'):'Retsept kiritilmagan. Hozircha tan narxi qo‘lda hisoblanadi.'}<br>Taxminiy tannarx: <b>${money(costPerBread(b)*q)}</b>`}
+function produce(){let b=db.breads.find(x=>x.id==$('prodBread').value),q=+$('prodQty').value;if(!b||q<1){toast("Non turi va sonini kiriting");return}for(let r of b.recipe||[]){let raw=db.raw.find(x=>x.id===r.rawId);if(!raw||raw.qty<r.qty*q){toast("Xomashyo yetarli emas: "+(raw?.name||"mahsulot"));return}}(b.recipe||[]).forEach(r=>{let raw=db.raw.find(x=>x.id===r.rawId);if(raw)raw.qty-=r.qty*q});b.stock+=q;db.production.unshift({date:$('prodDate').value||today(),bread:b.name,qty:q,cost:costPerBread(b)*q});save();toast("Ishlab chiqarish saqlandi")}
+function saleInfo(){let b=db.breads.find(x=>x.id==$('saleBread').value),q=+$('saleQty').value||0;if(!b){$('saleInfo').textContent="Non turini tanlang.";return}$('saleInfo').innerHTML=`Omborda: <b>${b.stock} dona</b> · Jami: <b>${money(b.sell*q)}</b> · Foyda: <b>${money((b.sell-costPerBread(b))*q)}</b>`}
+function sell(){let b=db.breads.find(x=>x.id==$('saleBread').value),q=+$('saleQty').value;if(!b||q<1){toast("Non turi va sonini kiriting");return}if(b.stock<q){toast("Omborda non yetarli emas. Ombor: "+b.stock);return}b.stock-=q;db.sales.unshift({id:id(),date:$('saleDate').value||today(),breadId:b.id,bread:b.name,qty:q,price:b.sell,cost:costPerBread(b),total:b.sell*q,profit:(b.sell-costPerBread(b))*q});save();toast("Sotuv saqlandi")}
+function addDelivery(){let customer=$('delCustomer').value.trim(),address=$('delAddress').value.trim(),b=db.breads.find(x=>x.id==$('delBread').value),q=+$('delQty').value;if(!customer||!address||!b||q<1){toast("Mijoz, manzil, non va sonini kiriting");return}if(b.stock<q){toast("Omborda yetarli non yo'q");return}b.stock-=q;db.deliveries.unshift({id:id(),date:today(),customer,phone:$('delPhone').value,address,breadId:b.id,bread:b.name,qty:q,driver:$('delDriver').value,status:"Kutilmoqda"});$('delCustomer').value=$('delPhone').value=$('delAddress').value=$('delDriver').value='';save();toast("Buyurtma saqlandi")}
+function deliveryStatus(i){let d=db.deliveries.find(x=>x.id===i);if(!d)return;d.status=d.status==="Kutilmoqda"?"Yetkazildi":"Kutilmoqda";save()}
+function saveSettings(){db.settings.utility=Math.max(0,Math.min(100,+$('utilityRate').value||0));db.settings.name=$('bakeryName').value.trim()||"MiniERP Nonvoyxona";save();toast("Sozlamalar saqlandi")}
+function resetAll(){if(!confirm("Barcha ma'lumotlar o'chadi. Davom etasizmi?"))return;db=fresh();save();toast("Ma'lumotlar tozalandi")}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='minierp-zaxira-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.raw||!x.breads)throw 0;db=x;save();toast("Zaxira tiklandi")}catch(err){toast("Fayl noto'g'ri")}};r.readAsText(f)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function rowsOrEmpty(arr,cols){return arr.length?arr:`<tr><td class="empty" colspan="${cols}">Hozircha ma'lumot yo'q</td></tr>`}
+function render(){
+ $('rawTable').innerHTML=rowsOrEmpty(db.raw.map(x=>`<tr><td>${esc(x.name)}</td><td>${Number(x.qty).toFixed(3)}</td><td>${esc(x.unit)}</td><td>${money(x.price)}</td><td>${money(x.qty*x.price)}</td><td><button class="btn danger small" onclick="deleteItem('raw',${x.id})">O'chirish</button></td></tr>`).join(''),6);
+ $('breadTable').innerHTML=rowsOrEmpty(db.breads.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${money(costPerBread(x))}</td><td>${money(x.sell)}</td><td>${x.stock} dona</td><td><button class="btn secondary small" onclick="openRecipe(${x.id})">Retsept</button></td><td><button class="btn danger small" onclick="deleteItem('bread',${x.id})">✕</button></td></tr>`).join(''),6);
+ ['prodBread','saleBread','delBread'].forEach(id=>{let el=$(id),v=el.value;el.innerHTML=db.breads.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');if(db.breads.some(x=>String(x.id)===v))el.value=v});
+ $('prodTable').innerHTML=rowsOrEmpty(db.production.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.bread)}</td><td>${x.qty}</td><td>${money(x.cost)}</td></tr>`).join(''),4);
+ $('salesTable').innerHTML=rowsOrEmpty(db.sales.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.bread)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.total)}</td><td>${money(x.profit)}</td></tr>`).join(''),6);
+ $('deliveryTable').innerHTML=rowsOrEmpty(db.deliveries.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.customer)}<br><small>${esc(x.phone)}</small></td><td>${esc(x.address)}</td><td>${esc(x.bread)}</td><td>${x.qty}</td><td>${esc(x.driver)}</td><td><span class="pill ${x.status==='Yetkazildi'?'green':''}">${x.status}</span></td><td><button class="btn secondary small" onclick="deliveryStatus(${x.id})">Holat</button></td></tr>`).join(''),8);
+ let rev=db.sales.reduce((s,x)=>s+x.total,0),profit=db.sales.reduce((s,x)=>s+x.profit,0),cost=db.sales.reduce((s,x)=>s+x.cost*x.qty,0),utility=profit*db.settings.utility/100;
+ $('sRevenue').textContent=money(db.sales.filter(x=>x.date===today()).reduce((s,x)=>s+x.total,0));$('sProfit').textContent=money(db.sales.filter(x=>x.date===today()).reduce((s,x)=>s+x.profit,0));$('sStock').textContent=db.breads.reduce((s,x)=>s+x.stock,0)+' dona';$('sRaw').textContent=db.raw.length+' ta';
+ $('rRevenue').textContent=money(rev);$('rCost').textContent=money(cost);$('rGross').textContent=money(profit);$('rUtility').textContent=money(utility);
+ $('reportBread').innerHTML=rowsOrEmpty(db.breads.map(b=>{let a=db.sales.filter(x=>x.breadId===b.id),q=a.reduce((s,x)=>s+x.qty,0),t=a.reduce((s,x)=>s+x.total,0),p=a.reduce((s,x)=>s+x.profit,0);return `<tr><td>${esc(b.name)}</td><td>${q}</td><td>${money(t)}</td><td>${money(p)}</td></tr>`}).join(''),4);
+ $('recentSales').innerHTML=rowsOrEmpty(db.sales.slice(0,5).map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.bread)}</td><td>${x.qty}</td><td>${money(x.total)}</td></tr>`).join(''),4);
+ $('utilityRate').value=db.settings.utility;$('bakeryName').value=db.settings.name;
+ prodInfo();saleInfo();
+}
+$('prodBread').addEventListener('change',prodInfo);$('prodQty').addEventListener('input',prodInfo);$('saleBread').addEventListener('change',saleInfo);$('saleQty').addEventListener('input',saleInfo);
+$('today').textContent=new Date().toLocaleDateString('uz-UZ',{day:'numeric',month:'long',year:'numeric'});$('prodDate').value=$('saleDate').value=today();render();
+</script>
+</body>
+</html>
